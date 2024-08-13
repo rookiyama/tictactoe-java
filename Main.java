@@ -24,17 +24,15 @@ public class Main {
     static void displayStatsScreen() {
         String print = (gamesPlayed > 0) ? "// Games played in a single session of Tic Tac Toe: "+ gamesPlayed +"\n// Player 1 Wins: "+ p1Wins +" (Win Rate: "+ ((double) p1Wins / gamesPlayed) * 100 +"%)\n// Player 2 Wins: "+ p2Wins +" (Win Rate: "+ ((double) p2Wins / gamesPlayed) * 100 +"%)\n" : "// Games played in a single session of Tic Tac Toe: 0\n// Player 1 Wins: 0 (Win Rate: 100%)\n// Player 2 Wins: 0 (Win Rate: 100%)\n";
         System.out.println(print);
-        int input = 0;
-        while (input != 1) {
-            try {
-                System.out.print("Type 1 to go back to Main Menu: ");
-                input = terminal.nextInt();
-            } catch (InputMismatchException e) {
-                terminal.next();
-            }
+        int input;
+        System.out.print("Type 1 to go back to Main Menu: ");
+        input = terminal.nextInt();
+        if (input == 1) {
+            System.out.print("\n");
+            displayMainMenu(); 
+        } else {
+            displayStatsScreen();
         }
-        System.out.print("\n");
-        displayMainMenu();
     }
     static void displayTable() {
         for (int row = 0; row < gameTable.length; ++row) {
@@ -57,15 +55,12 @@ public class Main {
         }
     }
     static void inputSymbol(int plr) {
-        int place = 0;
+        int place;
         System.out.print("Input: ");
-        while (place <= 0 || place > 9) {
-            try {
-                place = terminal.nextInt();
-            } catch (InputMismatchException e) {
-                System.out.println("⚠️ Invalid input. Please enter a number between 1 and 9.");
-                terminal.next();
-            }
+        place = terminal.nextInt();
+        if (place <= 0 || place > 9) {
+            System.out.println("⚠️ Invalid input. Please enter a number between 1 and 9.");
+            inputSymbol(plr);
         }
         place -= 1;
         switch (place) {
@@ -132,10 +127,9 @@ public class Main {
             displayTable();
             inputSymbol(player);
             checkGameState(player);
-            if (player == 1) {
-                player = 2;
-            } else if (player == 2) {
-                player = 1;
+            switch (player) {
+                case 1 -> player = 2;
+                case 2 -> player = 1;
             }
             gameCycle();
         } else {
